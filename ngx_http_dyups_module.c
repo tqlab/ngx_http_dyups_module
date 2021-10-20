@@ -491,15 +491,10 @@ ngx_http_dyups_init(ngx_conf_t *cf)
 static ngx_int_t
 ngx_http_dyups_init_process(ngx_cycle_t *cycle)
 {
-    ngx_core_conf_t             *ccf;
     ngx_slab_pool_t             *shpool;
-    ngx_dyups_shctx_t           *sh;
     ngx_http_dyups_main_conf_t  *dmcf;
 
-    ccf = (ngx_core_conf_t *) ngx_get_conf(cycle->conf_ctx, ngx_core_module);
-
-    dmcf = ngx_http_cycle_get_module_main_conf(ngx_cycle,
-                                               ngx_http_dyups_module);
+    dmcf = ngx_http_cycle_get_module_main_conf(ngx_cycle, ngx_http_dyups_module);
 
     if (!dmcf || !dmcf->enable || ngx_process == NGX_PROCESS_HELPER) {
         ngx_http_dyups_api_enable = 0;
@@ -509,7 +504,6 @@ ngx_http_dyups_init_process(ngx_cycle_t *cycle)
     ngx_http_dyups_api_enable = 1;
 
     shpool = ngx_dyups_global_ctx.shpool;
-    sh = ngx_dyups_global_ctx.sh;
 
     ngx_shmtx_lock(&shpool->mutex);
 
@@ -573,9 +567,8 @@ ngx_dyups_delete_upstream(ngx_str_t *name, ngx_str_t *rv)
 {
     ngx_int_t                    status, rc;
     ngx_slab_pool_t             *shpool;
-    ngx_http_dyups_main_conf_t  *dmcf;
 
-    dmcf = ngx_http_cycle_get_module_main_conf(ngx_cycle,
+    ngx_http_cycle_get_module_main_conf(ngx_cycle,
                                                ngx_http_dyups_module);
     shpool = ngx_dyups_global_ctx.shpool;
 
@@ -676,13 +669,11 @@ ngx_http_dyups_reload()
     ngx_buf_t              body;
     ngx_int_t              rc;
     ngx_str_t              rv;
-    ngx_slab_pool_t       *shpool;
     ngx_dyups_shctx_t     *sh;
     ngx_rbtree_node_t     *node, *root, *sentinel;
     ngx_dyups_upstream_t  *ups;
 
     sh = ngx_dyups_global_ctx.sh;
-    shpool = ngx_dyups_global_ctx.shpool;
     sentinel = sh->rbtree.sentinel;
     root = sh->rbtree.root;
 
@@ -955,9 +946,8 @@ ngx_dyups_update_upstream(ngx_str_t *name, ngx_buf_t *buf, ngx_str_t *rv)
 {
     ngx_int_t                    status;
     ngx_slab_pool_t             *shpool;
-    ngx_http_dyups_main_conf_t  *dmcf;
 
-    dmcf = ngx_http_cycle_get_module_main_conf(ngx_cycle,
+    ngx_http_cycle_get_module_main_conf(ngx_cycle,
                                                ngx_http_dyups_module);
     shpool = ngx_dyups_global_ctx.shpool;
 
